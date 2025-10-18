@@ -52,7 +52,6 @@ class DiagnosticSelectorUI:
         # Create widgets
         self.search_widget = self._create_search_widget()
         self.category_widget = self._create_category_widget()
-        self.dim_filter = self._create_dimension_filter()
         self.diag_container = create_scrollable_container([])
         self.header = create_section_header('Diagnostics', '(Selected: 0)')
 
@@ -103,18 +102,6 @@ class DiagnosticSelectorUI:
         widget.observe(lambda change: self.update_diagnostics_list(reset_page=True), names='value')
         return widget
 
-    def _create_dimension_filter(self) -> widgets.Dropdown:
-        """Create dimension filter dropdown."""
-        widget = create_dropdown(
-            options=['All', '2D Only', '3D Only'],
-            value='All',
-            description='Dimension:',
-            width='200px',
-            description_width='75px'
-        )
-        widget.observe(lambda change: self.update_diagnostics_list(reset_page=True), names='value')
-        return widget
-
     def _update_selection_cache(self):
         """Update cache of selected fields."""
         self.selected_cache.clear()
@@ -133,14 +120,13 @@ class DiagnosticSelectorUI:
                         break
 
     def _filter_diagnostics(self) -> List:
-        """Filter diagnostics based on search, category, and dimension.
+        """Filter diagnostics based on search and category.
 
         Returns:
             List of filtered Diagnostic objects
         """
         search_term = self.search_widget.value.lower()
         category = self.category_widget.value
-        dim_filter_val = self.dim_filter.value
 
         # Start with all diagnostics
         diags = list(self.parser.diagnostics.values())
@@ -162,12 +148,6 @@ class DiagnosticSelectorUI:
         if category != 'All Diagnostics':
             cat_diags = self._get_categories().get(category, [])
             diags = [d for d in diags if d in cat_diags]
-
-        # Apply dimension filter
-        if dim_filter_val == '2D Only':
-            diags = [d for d in diags if d.is_2d()]
-        elif dim_filter_val == '3D Only':
-            diags = [d for d in diags if d.is_3d()]
 
         diags.sort(key=lambda x: x.name)
         return diags
@@ -356,7 +336,7 @@ class DiagnosticSelectorUI:
         return widgets.VBox([
             self.header,
             widgets.HBox(
-                [self.search_widget, self.category_widget, self.dim_filter],
+                [self.search_widget, self.category_widget],
                 layout=widgets.Layout(margin='0 0 10px 0')
             ),
             widgets.HBox(

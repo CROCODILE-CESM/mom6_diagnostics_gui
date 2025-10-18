@@ -210,7 +210,8 @@ class FileConfigUI:
             file_config['output_freq'],
             description='Output freq.:',
             disabled=is_static,
-            width='320px'
+            width='320px',
+            description_width='85px'
         )
 
         units_widget = create_dropdown(
@@ -218,7 +219,8 @@ class FileConfigUI:
             value=file_config['output_freq_units'],
             description='Freq. units:',
             width='320px',
-            disabled=is_static
+            disabled=is_static,
+            description_width='80px'
         )
 
         # Get all modules from diagnostics
@@ -230,21 +232,24 @@ class FileConfigUI:
             options=sorted(list(all_modules)),
             value='ocean_model',
             description='Module name:',
-            width='320px'
+            width='320px',
+            description_width='95px'
         )
 
         reduction_widget = create_dropdown(
             options=['average', 'min', 'max', 'none'],
             value='average',
             description='Reduction method:',
-            width='320px'
+            width='320px',
+            description_width='120px'
         )
 
         packing_widget = create_dropdown(
             options=[('real*8', 1), ('real*4', 2), ('16-bit int', 4), ('1-byte', 8)],
             value=2,
             description='Data precision:',
-            width='320px'
+            width='320px',
+            description_width='105px'
         )
 
         # Regional configuration
@@ -325,7 +330,8 @@ class FileConfigUI:
         regional_dropdown = create_dropdown(
             options=['none', 'global', 'box'],
             value='none',
-            description='Regional section:'
+            description='Regional section:',
+            description_width='110px'
         )
 
         # Box input widgets (initially hidden)
